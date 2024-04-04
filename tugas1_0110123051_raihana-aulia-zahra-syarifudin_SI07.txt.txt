@@ -1,0 +1,716 @@
+Jawaban No. 1 Buatlah database baru dengan nama: dbpegawai 
+MariaDB [(none)]> CREATE DATABASE dbpegawai;
+Query OK, 1 row affected (0.005 sec)
+
+
+Jawaban No. 2 Masuk ke dbpegawai dengan perintah USE 
+MariaDB [(none)]> USE dbpegawai;
+Database changed
+
+
+Jawaban No. 3 Buatlah tabel baru dengan nama: divisi, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nama varchar(30) dengan contraint: wajib diisi dan tidak boleh sama
+MariaDB [dbpegawai]> CREATE TABLE divisi (
+    -> id int PRIMARY KEY AUTO_INCREMENT,
+    -> nama varchar(30) NOT NULL UNIQUE
+    -> );
+Query OK, 0 rows affected (0.063 sec)
+
+
+Jawaban No. 4 Tampilkan deskripsi tabel divisi 
+MariaDB [dbpegawai]> DESC divisi;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.020 sec)
+
+
+Jawaban No. 5 Buatlah tabel baru dengan nama: jabatan, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nama varchar(30) dengan contraint: wajib diisi dan tidak boleh sama
+MariaDB [dbpegawai]> CREATE TABLE jabatan (
+    -> id int PRIMARY KEY AUTO_INCREMENT,
+    -> nama varchar(30) NOT NULL UNIQUE
+    -> );
+Query OK, 0 rows affected (0.049 sec)
+
+
+Jawaban No. 6 Tampilkan deskripsi tabel jabatan
+MariaDB [dbpegawai]> DESC jabatan;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.201 sec)
+
+
+Jawaban No. 7 Buatlah tabel baru dengan nama: pegawai, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nip char dengan constraint: wajib diisi, tidak boleh sama & 5 karakter
+nama varchar dengan constraint: wajib diisi dan maksimal 30 karakter
+gender enum('Laki-Laki','Perempuan') dengan constraint: wajib diisi
+tmp_lahir varchar dengan constraint: wajib diisi dan maksimal 30 karakter
+tgl_lahir date dengan constraint: wajib diisi
+iddivisi int sebagai foreign key, tidak boleh kosong, merujuk ke tabel divisi ke field id
+idjabatan int sebagai foreign key, tidak boleh kosong, merujuk ke tabel jabatan ke field id
+alamat text
+MariaDB [dbpegawai]> CREATE TABLE pegawai (
+    -> id int PRIMARY KEY AUTO_INCREMENT,
+    -> nip char(5) NOT NULL UNIQUE,
+    -> nama varchar(30) NOT NULL,
+    -> gender enum('Laki-Laki','Perempuan') NOT NULL,
+    -> tmp_lahir varchar(30) NOT NULL,
+    -> tgl_lahir date NOT NULL,
+    -> iddivisi int NOT NULL,
+    -> idjabatan int NOT NULL,
+    -> alamat text,
+    -> FOREIGN KEY(iddivisi) REFERENCES divisi(id),
+    -> FOREIGN KEY(idjabatan) REFERENCES jabatan(id)
+    -> );
+Query OK, 0 rows affected (0.039 sec)
+
+
+Jawaban No. 8 Tampilkan deskripsi tabel pegawai
+MariaDB [dbpegawai]> DESC pegawai;
++-----------+-------------------------------+------+-----+---------+----------------+
+| Field     | Type                          | Null | Key | Default | Extra          |
++-----------+-------------------------------+------+-----+---------+----------------+
+| id        | int(11)                       | NO   | PRI | NULL    | auto_increment |
+| nip       | char(5)                       | NO   | UNI | NULL    |                |
+| nama      | varchar(30)                   | NO   |     | NULL    |                |
+| gender    | enum('Laki-Laki','Perempuan') | NO   |     | NULL    |                |
+| tmp_lahir | varchar(30)                   | NO   |     | NULL    |                |
+| tgl_lahir | date                          | NO   |     | NULL    |                |
+| iddivisi  | int(11)                       | NO   | MUL | NULL    |                |
+| idjabatan | int(11)                       | NO   | MUL | NULL    |                |
+| alamat    | text                          | YES  |     | NULL    |                |
++-----------+-------------------------------+------+-----+---------+----------------+
+9 rows in set (0.039 sec)
+
+
+Jawaban No. 9 Tampilkan tabel-tabel yang ada di dbpegawai
+MariaDB [dbpegawai]> SHOW TABLES;
++---------------------+
+| Tables_in_dbpegawai |
++---------------------+
+| divisi              |
+| jabatan             |
+| pegawai             |
++---------------------+
+3 rows in set (0.001 sec)
+
+
+Jawaban No. 10 Input data divisi => SDM, Keuangan, Marketing, IT
+MariaDB [dbpegawai]> INSERT INTO divisi (nama) VALUES ('SDM');
+Query OK, 1 row affected (0.007 sec)
+
+MariaDB [dbpegawai]> INSERT INTO divisi (nama) VALUES ('Keuangan');
+Query OK, 1 row affected (0.007 sec)
+
+MariaDB [dbpegawai]> INSERT INTO divisi (nama) VALUES ('Marketing');
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> INSERT INTO divisi (nama) VALUES ('IT');
+Query OK, 1 row affected (0.002 sec)
+
+
+Jawaban No. 11 Tampilkan seluruh data divisi
+MariaDB [dbpegawai]> SELECT * FROM divisi;
++----+-----------+
+| id | nama      |
++----+-----------+
+|  4 | IT        |
+|  2 | Keuangan  |
+|  3 | Marketing |
+|  1 | SDM       |
++----+-----------+
+4 rows in set (0.001 sec)
+
+
+Jawaban No. 12 Input data jabatan => Direktur, Manajer, Asisten Manajer, Staff
+MariaDB [dbpegawai]> INSERT INTO jabatan (nama) VALUES ('Direktur');
+Query OK, 1 row affected (0.007 sec)
+
+MariaDB [dbpegawai]> INSERT INTO jabatan (nama) VALUES ('Manajer');
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> INSERT INTO jabatan (nama) VALUES ('Asisten');
+Query OK, 1 row affected (0.007 sec)
+
+MariaDB [dbpegawai]> INSERT INTO jabatan (nama) VALUES ('Asisten Manajer');
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> INSERT INTO jabatan (nama) VALUES ('Staff');
+Query OK, 1 row affected (0.002 sec)
+
+
+Jawaban No. 13 Tampilkan seluruh data jabatan
+MariaDB [dbpegawai]> SELECT * FROM jabatan;
++----+-----------------+
+| id | nama            |
++----+-----------------+
+|  4 | Asisten Manajer |
+|  1 | Direktur        |
+|  2 | Manajer         |
+|  5 | Staff           |
++----+-----------------+
+4 rows in set (0.001 sec)
+
+
+Jawaban No. 14 Input 20 orang pegawai ( 1 divisi 5 orang, untuk gender dan jabatan diacak)
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01102', 'Adam', 'Laki-Laki', 'Jakarta', '2004-10-05',4,1,'jl raya ciomas');
+Query OK, 1 row affected (0.010 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01103', 'Adel', 'Perempuan', 'Bogor', '2004-05-05',2,4,'jl raya leuwiliang');
+Query OK, 1 row affected (0.009 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01104', 'Leon', 'Laki-Laki', 'Bogor', '2005-02-03',3,1,'jl raya cibanteng');
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01105', 'Elsa', 'Perempuan', 'Bogor', '2005-04-07',2,5,'jl raya ciampea');
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01106', 'Rizki', 'Laki-Laki', 'Bogor', '2005-07-10',1,5,'jl raya dramaga');
+Query OK, 1 row affected (0.007 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01107', 'Fadil', 'Laki-Laki', 'Bogor', '2005-10-01',3,2,'jl raya batu tulis');
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01108', 'Ridho', 'Laki-Laki', 'Bogor', '2004-01-15',4,2,'jl raya warung borong');
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01109', 'Fathir', 'Laki-Laki', 'Bogor', '2005-04-21',1,1,'jl raya cinangneng');
+Query OK, 1 row affected (0.010 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01110', 'Bakti', 'Laki-Laki', 'Bogor', '2005-09-13',3,4,'jl raya ciamis');
+Query OK, 1 row affected (0.010 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01111', 'Raffy', 'Laki-Laki', 'Bogor', '2005-08-01',1,4,'jl raya bubulak');
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01112', 'Jua', 'Perempuan', 'Sukabumi', '2005-07-11',3,5,'jl raya cikampek');
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01113', 'Ocha', 'Perempuan', 'Jakarta', '2005-07-07',1,2,'jl raya cakung');
+Query OK, 1 row affected (0.009 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01114', 'Nadya', 'Perempuan', 'Bogor', '2005-12-13',2,1,'jl raya milenium');
+Query OK, 1 row affected (0.009 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01115', 'Nina', 'Perempuan', 'Bogor', '2005-05-04',2,5,'jl raya cibadak');
+Query OK, 1 row affected (0.009 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01116', 'Salsa', 'Perempuan', 'Bogor', '2006-08-09',4,1,'jl raya cilengsi');
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01117', 'Roby', 'Laki-Laki', 'Depok', '2005-07-20',4,4,'jl raya lenteng angung');
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01118', 'Wawa', 'Perempuan', 'Depok', '2005-11-06',4,5,'jl raya parung');
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01119', 'Aya', 'Perempuan', 'Jakarta', '2005-04-08',1,5,'jl raya tanjung barat');
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01120', 'Destia', 'Perempuan', 'Bogor', '2004-12-04',4,5,'jl raya sawangan baru');
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES ('01121', 'Ranti', 'Perempuan', 'Bogor', '2004-12-21',1,5,'jl raya bogor barat');
+Query OK, 1 row affected (0.008 sec)
+
+
+Jawaban No. 15 Tampilkan seluruh data pegawai 
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+--------+-----------+-----------+------------+----------+-----------+------------------------+
+| id | nip   | nama   | gender    | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                 |
++----+-------+--------+-----------+-----------+------------+----------+-----------+------------------------+
+|  3 | 01102 | Adam   | Laki-Laki | Jakarta   | 2004-10-05 |        4 |         1 | jl raya ciomas         |
+|  5 | 01103 | Adel   | Perempuan | Bogor     | 2004-05-05 |        2 |         4 | jl raya leuwiliang     |
+|  6 | 01104 | Leon   | Laki-Laki | Bogor     | 2005-02-03 |        3 |         1 | jl raya cibanteng      |
+|  7 | 01105 | Elsa   | Perempuan | Bogor     | 2005-04-07 |        2 |         5 | jl raya ciampea        |
+|  8 | 01106 | Rizki  | Laki-Laki | Bogor     | 2005-07-10 |        1 |         5 | jl raya dramaga        |
+|  9 | 01107 | Fadil  | Laki-Laki | Bogor     | 2005-10-01 |        3 |         2 | jl raya batu tulis     |
+| 10 | 01108 | Ridho  | Laki-Laki | Bogor     | 2004-01-15 |        4 |         2 | jl raya warung borong  |
+| 11 | 01109 | Fathir | Laki-Laki | Bogor     | 2005-04-21 |        1 |         1 | jl raya cinangneng     |
+| 12 | 01110 | Bakti  | Laki-Laki | Bogor     | 2005-09-13 |        3 |         4 | jl raya ciamis         |
+| 13 | 01111 | Raffy  | Laki-Laki | Bogor     | 2005-08-01 |        1 |         4 | jl raya bubulak        |
+| 14 | 01112 | Jua    | Perempuan | Sukabumi  | 2005-07-11 |        3 |         5 | jl raya cikampek       |
+| 16 | 01113 | Ocha   | Perempuan | Jakarta   | 2005-07-07 |        1 |         2 | jl raya cakung         |
+| 17 | 01114 | Nadya  | Perempuan | Bogor     | 2005-12-13 |        2 |         1 | jl raya milenium       |
+| 18 | 01115 | Nina   | Perempuan | Bogor     | 2005-05-04 |        2 |         5 | jl raya cibadak        |
+| 19 | 01116 | Salsa  | Perempuan | Bogor     | 2006-08-09 |        4 |         1 | jl raya cilengsi       |
+| 20 | 01117 | Roby   | Laki-Laki | Depok     | 2005-07-20 |        4 |         4 | jl raya lenteng angung |
+| 26 | 01118 | Wawa   | Perempuan | Depok     | 2005-11-06 |        4 |         5 | jl raya parung         |
+| 27 | 01119 | Aya    | Perempuan | Jakarta   | 2005-04-08 |        1 |         5 | jl raya tanjung barat  |
+| 28 | 01120 | Destia | Perempuan | Bogor     | 2004-12-04 |        4 |         5 | jl raya sawangan baru  |
+| 29 | 01121 | Ranti  | Perempuan | Bogor     | 2004-12-21 |        1 |         5 | jl raya bogor barat    |
++----+-------+--------+-----------+-----------+------------+----------+-----------+------------------------+
+20 rows in set (0.002 sec)
+
+
+Jawaban No. 16 Ubah data 5 orang pegawai (dengan ketentuan ubah 3 kolom(bebas))
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Dilla', gender= 'Perempuan', alamat= 'jl raya situ hiyang'
+    -> WHERE id = 3;
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Mitha', gender= 'Perempuan', alamat= 'jl raya tegal waru'
+    -> WHERE id = 11;
+Query OK, 1 row affected (0.009 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Sabri', gender= 'Laki-Laki', alamat= 'jl raya benteng'
+    -> WHERE id = 17;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Kiki', gender= 'Laki-Laki', alamat= 'jl raya pengasinan'
+    -> WHERE id = 27;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET nama = 'Molly', gender= 'Perempuan', alamat= 'jl raya cisarua'
+    -> WHERE id = 13;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+Jawaban No. 17 Hapus 2 orang pegawai pegawai terakhir 
+MariaDB [dbpegawai]> DELETE FROM pegawai
+    -> ORDER BY id DESC LIMIT 2;
+Query OK, 2 rows affected (0.008 sec)
+
+
+Jawaban No. 18 Gunakan alter tabel pada tabel pegawai untuk menambahkan kolom baru berat_badan dengan
+tipe data float wajib diisi, lalu input berat badan semua pegawai secara acak
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> ADD berat_badan FLOAT NOT NULL;
+Query OK, 0 rows affected (0.017 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET berat_badan = ROUND(RAND() * 50 + 40, 2);
+Query OK, 20 rows affected (0.008 sec)
+Rows matched: 20  Changed: 20  Warnings: 0
+
+
+Jawaban No. 19 Gunakan alter tabel pada tabel pegawai untuk menambahkan kolom baru umur dengan tipe data
+integer wajib diisi, lalu input umur semua pegawai secara acak
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> ADD umur INT NOT NULL;
+Query OK, 0 rows affected (0.015 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai
+    -> SET umur = FLOOR(RAND() * 20) + 20;
+Query OK, 18 rows affected (0.012 sec)
+Rows matched: 18  Changed: 18  Warnings: 0
+
+
+Jawaban No. 20 Gunakan alter tabel pada tabel pegawai untuk mengubah nama kolom gender menjadi
+jenis_kelamin
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> CHANGE COLUMN gender jenis_kelamin VARCHAR(255);
+Query OK, 18 rows affected (0.078 sec)
+Records: 18  Duplicates: 0  Warnings: 0
+
+Jawaban No. 21 Tampilkan kolom2 tertentu di tabel pegawai (nip,nama,jenis_kelamin,alamat)
+MariaDB [dbpegawai]> SELECT nip, nama, jenis_kelamin, alamat FROM pegawai;
++-------+-------+---------------+------------------------+
+| nip   | nama  | jenis_kelamin | alamat                 |
++-------+-------+---------------+------------------------+
+| 01102 | Dilla | Perempuan     | jl raya situ hiyang    |
+| 01103 | Adel  | Perempuan     | jl raya leuwiliang     |
+| 01104 | Leon  | Laki-Laki     | jl raya cibanteng      |
+| 01105 | Elsa  | Perempuan     | jl raya ciampea        |
+| 01106 | Rizki | Laki-Laki     | jl raya dramaga        |
+| 01107 | Fadil | Laki-Laki     | jl raya batu tulis     |
+| 01108 | Ridho | Laki-Laki     | jl raya warung borong  |
+| 01109 | Mitha | Perempuan     | jl raya tegal waru     |
+| 01110 | Bakti | Laki-Laki     | jl raya ciamis         |
+| 01111 | Molly | Perempuan     | jl raya cisarua        |
+| 01112 | Jua   | Perempuan     | jl raya cikampek       |
+| 01113 | Ocha  | Perempuan     | jl raya cakung         |
+| 01114 | Sabri | Laki-Laki     | jl raya benteng        |
+| 01115 | Nina  | Perempuan     | jl raya cibadak        |
+| 01116 | Salsa | Perempuan     | jl raya cilengsi       |
+| 01117 | Roby  | Laki-Laki     | jl raya lenteng angung |
+| 01118 | Wawa  | Perempuan     | jl raya parung         |
+| 01119 | Kiki  | Laki-Laki     | jl raya pengasinan     |
++-------+-------+---------------+------------------------+
+18 rows in set (0.001 sec)
+
+
+Jawaban No. 22 Tampilkan baris2 tertentu di tabel pegawai (yang gendernya laki2 saja)
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE jenis_kelamin = 'Laki-Laki';
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                 | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+|  6 | 01104 | Leon  | Laki-Laki     | Bogor     | 2005-02-03 |        3 |         1 | jl raya cibanteng      |       40.42 |   28 |
+|  8 | 01106 | Rizki | Laki-Laki     | Bogor     | 2005-07-10 |        1 |         5 | jl raya dramaga        |       53.53 |   29 |
+|  9 | 01107 | Fadil | Laki-Laki     | Bogor     | 2005-10-01 |        3 |         2 | jl raya batu tulis     |       58.76 |   39 |
+| 10 | 01108 | Ridho | Laki-Laki     | Bogor     | 2004-01-15 |        4 |         2 | jl raya warung borong  |       43.22 |   30 |
+| 12 | 01110 | Bakti | Laki-Laki     | Bogor     | 2005-09-13 |        3 |         4 | jl raya ciamis         |       79.37 |   30 |
+| 17 | 01114 | Sabri | Laki-Laki     | Bogor     | 2005-12-13 |        2 |         1 | jl raya benteng        |       49.79 |   20 |
+| 20 | 01117 | Roby  | Laki-Laki     | Depok     | 2005-07-20 |        4 |         4 | jl raya lenteng angung |          52 |   21 |
+| 27 | 01119 | Kiki  | Laki-Laki     | Jakarta   | 2005-04-08 |        1 |         5 | jl raya pengasinan     |       50.76 |   21 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+8 rows in set (0.001 sec)
+
+
+Jawaban No. 23 Tampilkan baris2 tertentu di tabel pegawai (yang bekerja di divisi IT dan gendernya perempuan)
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE iddivisi = 4 AND jenis_kelamin = 'Perempuan';
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat              | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+|  3 | 01102 | Dilla | Perempuan     | Jakarta   | 2004-10-05 |        4 |         1 | jl raya situ hiyang |       83.83 |   31 |
+| 19 | 01116 | Salsa | Perempuan     | Bogor     | 2006-08-09 |        4 |         1 | jl raya cilengsi    |       53.55 |   25 |
+| 26 | 01118 | Wawa  | Perempuan     | Depok     | 2005-11-06 |        4 |         5 | jl raya parung      |       59.35 |   29 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+3 rows in set (0.005 sec)
+
+
+Jawaban No. 24 Tampilkan data pegawai yang umurnya di atas 30 tahun dan lahirnya di kota jakarta dengan
+klausa WHERE, AND
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE umur > 30 AND tmp_lahir = 'Jakarta';
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat              | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+|  3 | 01102 | Dilla | Perempuan     | Jakarta   | 2004-10-05 |        4 |         1 | jl raya situ hiyang |       83.83 |   31 |
+| 16 | 01113 | Ocha  | Perempuan     | Jakarta   | 2005-07-07 |        1 |         2 | jl raya cakung      |       83.46 |   37 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+2 rows in set (0.001 sec)
+
+
+Jawaban No. 25 Tampilkan data pegawai yang bekerja pada divisi marketing, berumur lebih dari 30 tahun dan
+berjenis kelamin perempuan dengan klausa WHERE, AND 
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE iddivisi = 3 AND umur > 30 AND jenis_kelamin = 'Perempuan';
+Empty set (0.002 sec)
+
+
+Jawaban No. 26 Tampilkan data pegawai dengan klausa key (nip) 
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY nip;
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                 | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+|  3 | 01102 | Dilla | Perempuan     | Jakarta   | 2004-10-05 |        4 |         1 | jl raya situ hiyang    |       83.83 |   31 |
+|  5 | 01103 | Adel  | Perempuan     | Bogor     | 2004-05-05 |        2 |         4 | jl raya leuwiliang     |       46.38 |   32 |
+|  6 | 01104 | Leon  | Laki-Laki     | Bogor     | 2005-02-03 |        3 |         1 | jl raya cibanteng      |       40.42 |   28 |
+|  7 | 01105 | Elsa  | Perempuan     | Bogor     | 2005-04-07 |        2 |         5 | jl raya ciampea        |       72.96 |   22 |
+|  8 | 01106 | Rizki | Laki-Laki     | Bogor     | 2005-07-10 |        1 |         5 | jl raya dramaga        |       53.53 |   29 |
+|  9 | 01107 | Fadil | Laki-Laki     | Bogor     | 2005-10-01 |        3 |         2 | jl raya batu tulis     |       58.76 |   39 |
+| 10 | 01108 | Ridho | Laki-Laki     | Bogor     | 2004-01-15 |        4 |         2 | jl raya warung borong  |       43.22 |   30 |
+| 11 | 01109 | Mitha | Perempuan     | Bogor     | 2005-04-21 |        1 |         1 | jl raya tegal waru     |        49.8 |   32 |
+| 12 | 01110 | Bakti | Laki-Laki     | Bogor     | 2005-09-13 |        3 |         4 | jl raya ciamis         |       79.37 |   30 |
+| 13 | 01111 | Molly | Perempuan     | Bogor     | 2005-08-01 |        1 |         4 | jl raya cisarua        |       57.46 |   36 |
+| 14 | 01112 | Jua   | Perempuan     | Sukabumi  | 2005-07-11 |        3 |         5 | jl raya cikampek       |       59.17 |   29 |
+| 16 | 01113 | Ocha  | Perempuan     | Jakarta   | 2005-07-07 |        1 |         2 | jl raya cakung         |       83.46 |   37 |
+| 17 | 01114 | Sabri | Laki-Laki     | Bogor     | 2005-12-13 |        2 |         1 | jl raya benteng        |       49.79 |   20 |
+| 18 | 01115 | Nina  | Perempuan     | Bogor     | 2005-05-04 |        2 |         5 | jl raya cibadak        |       58.59 |   29 |
+| 19 | 01116 | Salsa | Perempuan     | Bogor     | 2006-08-09 |        4 |         1 | jl raya cilengsi       |       53.55 |   25 |
+| 20 | 01117 | Roby  | Laki-Laki     | Depok     | 2005-07-20 |        4 |         4 | jl raya lenteng angung |          52 |   21 |
+| 26 | 01118 | Wawa  | Perempuan     | Depok     | 2005-11-06 |        4 |         5 | jl raya parung         |       59.35 |   29 |
+| 27 | 01119 | Kiki  | Laki-Laki     | Jakarta   | 2005-04-08 |        1 |         5 | jl raya pengasinan     |       50.76 |   21 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+18 rows in set (0.002 sec)
+
+
+Jawaban No. 27 Tampilkan data pegawai dengan klausa non key (gender)
+MariaDB [dbpegawai]> SELECT jenis_kelamin FROM pegawai;
++---------------+
+| jenis_kelamin |
++---------------+
+| Perempuan     |
+| Perempuan     |
+| Laki-Laki     |
+| Perempuan     |
+| Laki-Laki     |
+| Laki-Laki     |
+| Laki-Laki     |
+| Perempuan     |
+| Laki-Laki     |
+| Perempuan     |
+| Perempuan     |
+| Perempuan     |
+| Laki-Laki     |
+| Perempuan     |
+| Perempuan     |
+| Laki-Laki     |
+| Perempuan     |
+| Laki-Laki     |
++---------------+
+18 rows in set (0.001 sec)
+
+
+Jawaban No. 28 Tampilkan data pegawai dengan klausa in (menyebutkan beberapa nip)
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE nip IN ('01102', '01103', '01104');
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat              | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+|  3 | 01102 | Dilla | Perempuan     | Jakarta   | 2004-10-05 |        4 |         1 | jl raya situ hiyang |       83.83 |   31 |
+|  5 | 01103 | Adel  | Perempuan     | Bogor     | 2004-05-05 |        2 |         4 | jl raya leuwiliang  |       46.38 |   32 |
+|  6 | 01104 | Leon  | Laki-Laki     | Bogor     | 2005-02-03 |        3 |         1 | jl raya cibanteng   |       40.42 |   28 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+3 rows in set (0.001 sec)
+
+
+Jawaban No. 29 Tampilkan data pegawai dengan klausa not in (menyebutkan beberapa tempat lahir)
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE tmp_lahir NOT IN ('Sukabumi', 'Jakarta');
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                 | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+|  5 | 01103 | Adel  | Perempuan     | Bogor     | 2004-05-05 |        2 |         4 | jl raya leuwiliang     |       46.38 |   32 |
+|  6 | 01104 | Leon  | Laki-Laki     | Bogor     | 2005-02-03 |        3 |         1 | jl raya cibanteng      |       40.42 |   28 |
+|  7 | 01105 | Elsa  | Perempuan     | Bogor     | 2005-04-07 |        2 |         5 | jl raya ciampea        |       72.96 |   22 |
+|  8 | 01106 | Rizki | Laki-Laki     | Bogor     | 2005-07-10 |        1 |         5 | jl raya dramaga        |       53.53 |   29 |
+|  9 | 01107 | Fadil | Laki-Laki     | Bogor     | 2005-10-01 |        3 |         2 | jl raya batu tulis     |       58.76 |   39 |
+| 10 | 01108 | Ridho | Laki-Laki     | Bogor     | 2004-01-15 |        4 |         2 | jl raya warung borong  |       43.22 |   30 |
+| 11 | 01109 | Mitha | Perempuan     | Bogor     | 2005-04-21 |        1 |         1 | jl raya tegal waru     |        49.8 |   32 |
+| 12 | 01110 | Bakti | Laki-Laki     | Bogor     | 2005-09-13 |        3 |         4 | jl raya ciamis         |       79.37 |   30 |
+| 13 | 01111 | Molly | Perempuan     | Bogor     | 2005-08-01 |        1 |         4 | jl raya cisarua        |       57.46 |   36 |
+| 17 | 01114 | Sabri | Laki-Laki     | Bogor     | 2005-12-13 |        2 |         1 | jl raya benteng        |       49.79 |   20 |
+| 18 | 01115 | Nina  | Perempuan     | Bogor     | 2005-05-04 |        2 |         5 | jl raya cibadak        |       58.59 |   29 |
+| 19 | 01116 | Salsa | Perempuan     | Bogor     | 2006-08-09 |        4 |         1 | jl raya cilengsi       |       53.55 |   25 |
+| 20 | 01117 | Roby  | Laki-Laki     | Depok     | 2005-07-20 |        4 |         4 | jl raya lenteng angung |          52 |   21 |
+| 26 | 01118 | Wawa  | Perempuan     | Depok     | 2005-11-06 |        4 |         5 | jl raya parung         |       59.35 |   29 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+14 rows in set (0.001 sec)
+
+
+Jawaban No. 30 Tampilkan data pegawai berdasarkan nama secara ascending
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> ORDER BY nama ASC;
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                 | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+|  5 | 01103 | Adel  | Perempuan     | Bogor     | 2004-05-05 |        2 |         4 | jl raya leuwiliang     |       46.38 |   32 |
+| 12 | 01110 | Bakti | Laki-Laki     | Bogor     | 2005-09-13 |        3 |         4 | jl raya ciamis         |       79.37 |   30 |
+|  3 | 01102 | Dilla | Perempuan     | Jakarta   | 2004-10-05 |        4 |         1 | jl raya situ hiyang    |       83.83 |   31 |
+|  7 | 01105 | Elsa  | Perempuan     | Bogor     | 2005-04-07 |        2 |         5 | jl raya ciampea        |       72.96 |   22 |
+|  9 | 01107 | Fadil | Laki-Laki     | Bogor     | 2005-10-01 |        3 |         2 | jl raya batu tulis     |       58.76 |   39 |
+| 14 | 01112 | Jua   | Perempuan     | Sukabumi  | 2005-07-11 |        3 |         5 | jl raya cikampek       |       59.17 |   29 |
+| 27 | 01119 | Kiki  | Laki-Laki     | Jakarta   | 2005-04-08 |        1 |         5 | jl raya pengasinan     |       50.76 |   21 |
+|  6 | 01104 | Leon  | Laki-Laki     | Bogor     | 2005-02-03 |        3 |         1 | jl raya cibanteng      |       40.42 |   28 |
+| 11 | 01109 | Mitha | Perempuan     | Bogor     | 2005-04-21 |        1 |         1 | jl raya tegal waru     |        49.8 |   32 |
+| 13 | 01111 | Molly | Perempuan     | Bogor     | 2005-08-01 |        1 |         4 | jl raya cisarua        |       57.46 |   36 |
+| 18 | 01115 | Nina  | Perempuan     | Bogor     | 2005-05-04 |        2 |         5 | jl raya cibadak        |       58.59 |   29 |
+| 16 | 01113 | Ocha  | Perempuan     | Jakarta   | 2005-07-07 |        1 |         2 | jl raya cakung         |       83.46 |   37 |
+| 10 | 01108 | Ridho | Laki-Laki     | Bogor     | 2004-01-15 |        4 |         2 | jl raya warung borong  |       43.22 |   30 |
+|  8 | 01106 | Rizki | Laki-Laki     | Bogor     | 2005-07-10 |        1 |         5 | jl raya dramaga        |       53.53 |   29 |
+| 20 | 01117 | Roby  | Laki-Laki     | Depok     | 2005-07-20 |        4 |         4 | jl raya lenteng angung |          52 |   21 |
+| 17 | 01114 | Sabri | Laki-Laki     | Bogor     | 2005-12-13 |        2 |         1 | jl raya benteng        |       49.79 |   20 |
+| 19 | 01116 | Salsa | Perempuan     | Bogor     | 2006-08-09 |        4 |         1 | jl raya cilengsi       |       53.55 |   25 |
+| 26 | 01118 | Wawa  | Perempuan     | Depok     | 2005-11-06 |        4 |         5 | jl raya parung         |       59.35 |   29 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+18 rows in set (0.002 sec)
+
+
+Jawaban No. 31 Tampilkan data pegawai dari yang berat badan paling gemuk ke paling kurus
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> ORDER BY berat_badan DESC;
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                 | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+|  3 | 01102 | Dilla | Perempuan     | Jakarta   | 2004-10-05 |        4 |         1 | jl raya situ hiyang    |       83.83 |   31 |
+| 16 | 01113 | Ocha  | Perempuan     | Jakarta   | 2005-07-07 |        1 |         2 | jl raya cakung         |       83.46 |   37 |
+| 12 | 01110 | Bakti | Laki-Laki     | Bogor     | 2005-09-13 |        3 |         4 | jl raya ciamis         |       79.37 |   30 |
+|  7 | 01105 | Elsa  | Perempuan     | Bogor     | 2005-04-07 |        2 |         5 | jl raya ciampea        |       72.96 |   22 |
+| 26 | 01118 | Wawa  | Perempuan     | Depok     | 2005-11-06 |        4 |         5 | jl raya parung         |       59.35 |   29 |
+| 14 | 01112 | Jua   | Perempuan     | Sukabumi  | 2005-07-11 |        3 |         5 | jl raya cikampek       |       59.17 |   29 |
+|  9 | 01107 | Fadil | Laki-Laki     | Bogor     | 2005-10-01 |        3 |         2 | jl raya batu tulis     |       58.76 |   39 |
+| 18 | 01115 | Nina  | Perempuan     | Bogor     | 2005-05-04 |        2 |         5 | jl raya cibadak        |       58.59 |   29 |
+| 13 | 01111 | Molly | Perempuan     | Bogor     | 2005-08-01 |        1 |         4 | jl raya cisarua        |       57.46 |   36 |
+| 19 | 01116 | Salsa | Perempuan     | Bogor     | 2006-08-09 |        4 |         1 | jl raya cilengsi       |       53.55 |   25 |
+|  8 | 01106 | Rizki | Laki-Laki     | Bogor     | 2005-07-10 |        1 |         5 | jl raya dramaga        |       53.53 |   29 |
+| 20 | 01117 | Roby  | Laki-Laki     | Depok     | 2005-07-20 |        4 |         4 | jl raya lenteng angung |          52 |   21 |
+| 27 | 01119 | Kiki  | Laki-Laki     | Jakarta   | 2005-04-08 |        1 |         5 | jl raya pengasinan     |       50.76 |   21 |
+| 11 | 01109 | Mitha | Perempuan     | Bogor     | 2005-04-21 |        1 |         1 | jl raya tegal waru     |        49.8 |   32 |
+| 17 | 01114 | Sabri | Laki-Laki     | Bogor     | 2005-12-13 |        2 |         1 | jl raya benteng        |       49.79 |   20 |
+|  5 | 01103 | Adel  | Perempuan     | Bogor     | 2004-05-05 |        2 |         4 | jl raya leuwiliang     |       46.38 |   32 |
+| 10 | 01108 | Ridho | Laki-Laki     | Bogor     | 2004-01-15 |        4 |         2 | jl raya warung borong  |       43.22 |   30 |
+|  6 | 01104 | Leon  | Laki-Laki     | Bogor     | 2005-02-03 |        3 |         1 | jl raya cibanteng      |       40.42 |   28 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+18 rows in set (0.001 sec)
+
+
+Jawaban No. 32 Tampilkan data 5 pegawai teratas gunakan klausa limit
+MariaDB [dbpegawai]> SELECT * FROM pegawai LIMIT 5;
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat              | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+|  3 | 01102 | Dilla | Perempuan     | Jakarta   | 2004-10-05 |        4 |         1 | jl raya situ hiyang |       83.83 |   31 |
+|  5 | 01103 | Adel  | Perempuan     | Bogor     | 2004-05-05 |        2 |         4 | jl raya leuwiliang  |       46.38 |   32 |
+|  6 | 01104 | Leon  | Laki-Laki     | Bogor     | 2005-02-03 |        3 |         1 | jl raya cibanteng   |       40.42 |   28 |
+|  7 | 01105 | Elsa  | Perempuan     | Bogor     | 2005-04-07 |        2 |         5 | jl raya ciampea     |       72.96 |   22 |
+|  8 | 01106 | Rizki | Laki-Laki     | Bogor     | 2005-07-10 |        1 |         5 | jl raya dramaga     |       53.53 |   29 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------------------+-------------+------+
+5 rows in set (0.001 sec)
+
+
+Jawaban No. 33 Tampilkan data 5 pegawai terbawah gunakan klausa limit offset
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY id DESC LIMIT 5;
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                 | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+| 27 | 01119 | Kiki  | Laki-Laki     | Jakarta   | 2005-04-08 |        1 |         5 | jl raya pengasinan     |       50.76 |   21 |
+| 26 | 01118 | Wawa  | Perempuan     | Depok     | 2005-11-06 |        4 |         5 | jl raya parung         |       59.35 |   29 |
+| 20 | 01117 | Roby  | Laki-Laki     | Depok     | 2005-07-20 |        4 |         4 | jl raya lenteng angung |          52 |   21 |
+| 19 | 01116 | Salsa | Perempuan     | Bogor     | 2006-08-09 |        4 |         1 | jl raya cilengsi       |       53.55 |   25 |
+| 18 | 01115 | Nina  | Perempuan     | Bogor     | 2005-05-04 |        2 |         5 | jl raya cibadak        |       58.59 |   29 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------------------+-------------+------+
+5 rows in set (0.001 sec)
+
+
+Jawaban No. 34 Tampilkan jumlah pegawai gunakan fungsi aggregrat count
+MariaDB [dbpegawai]> SELECT COUNT(*) AS total_pegawai FROM pegawai;
++---------------+
+| total_pegawai |
++---------------+
+|            18 |
++---------------+
+1 row in set (0.001 sec)
+
+
+Jawaban No. 35 Tampilkan nip,nama pegawai, umur yg paling tua gunakan fungsi aggregrat max (kombinasi
+dengan sub query)
+MariaDB [dbpegawai]> SELECT nip, nama, umur FROM pegawai
+    -> WHERE umur = (SELECT MAX(umur) FROM pegawai);
++-------+-------+------+
+| nip   | nama  | umur |
++-------+-------+------+
+| 01107 | Fadil |   39 |
++-------+-------+------+
+1 row in set (0.002 sec)
+
+
+Jawaban No. 36 Tampilkan nip,nama pegawai, berat_badan yg paling kurus gunakan fungsi aggregrat min
+(kombinasi dengan sub query) 
+MariaDB [dbpegawai]> SELECT nip, nama, berat_badan FROM pegawai
+    -> WHERE berat_badan = (SELECT MIN(berat_badan) FROM pegawai);
++-------+------+-------------+
+| nip   | nama | berat_badan |
++-------+------+-------------+
+| 01104 | Leon |       40.42 |
++-------+------+-------------+
+1 row in set (0.001 sec)
+
+
+Jawaban No. 37 Tampilkan data rata2 umur pegawai gunakan fungsi aggregrat avg
+MariaDB [dbpegawai]> SELECT AVG(umur) AS rata_rata_umur FROM pegawai;
++----------------+
+| rata_rata_umur |
++----------------+
+|        28.8889 |
++----------------+
+1 row in set (0.001 sec)
+
+
+Jawaban No. 38 Tampilkan jumlah data pegawai yang laki2 dan berumur lebih dari 40 tahun dan berjabatan
+Manajer, gunakan fungsi aggregrat count dan klausa AND 
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai_manajer FROM pegawai
+    -> WHERE jenis_kelamin = 'Laki-Laki' AND umur > 40 AND idjabatan = 2;
++------------------------+
+| jumlah_pegawai_manajer |
++------------------------+
+|                      0 |
++------------------------+
+1 row in set (0.001 sec)
+
+
+Jawaban No. 39 Tampilkan jumlah data pegawai yang perempuan dan berumur kurang dari 40 tahun dan
+berjabatan Staff, gunakan fungsi aggregrat count dan klausa AND
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai_staff FROM pegawai
+    -> WHERE jenis_kelamin = 'Perempuan' AND umur < 40 AND idjabatan = 5;
++----------------------+
+| jumlah_pegawai_staff |
++----------------------+
+|                    4 |
++----------------------+
+1 row in set (0.001 sec)
+
+
+Jawaban No. 40 Tampilkan jumlah data pegawai yang perempuan gunakan fungsi aggregrat count
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai_perempuan FROM pegawai
+    -> WHERE jenis_kelamin = 'Perempuan';
++--------------------------+
+| jumlah_pegawai_perempuan |
++--------------------------+
+|                       10 |
++--------------------------+
+1 row in set (0.001 sec)
+
+Jawaban No. 41 Tampilkan jumlah pegawai yang bekerja di divisi SDM dengan fungsi aggregrat sum dan klausa
+WHERE
+MariaDB [dbpegawai]> SELECT SUM(CASE WHEN iddivisi = 1 THEN 1 ELSE 0 END) AS jumlah_pegawai_SDM FROM pegawai;
++--------------------+
+| jumlah_pegawai_SDM |
++--------------------+
+|                  5 |
++--------------------+
+1 row in set (0.002 sec)
+
+
+Jawaban No. 42 Tampilkan jumlah pegawai berdasarkan divisi masing2 menggunakan fungsi aggregrat count
+dan klausa group by
+MariaDB [dbpegawai]> SELECT iddivisi, COUNT(*) AS jumlah_pegawai FROM pegawai GROUP BY iddivisi;
++----------+----------------+
+| iddivisi | jumlah_pegawai |
++----------+----------------+
+|        1 |              5 |
+|        2 |              4 |
+|        3 |              4 |
+|        4 |              5 |
++----------+----------------+
+4 rows in set (0.001 sec)
+
+
+Jawaban No. 43 Tampilkan data jumlah pegawai berdasarkan gender, yg jumlah minimal 10 orang (gunakan
+group by dan having) 
+MariaDB [dbpegawai]> SELECT jenis_kelamin, COUNT(*) AS jumlah_pegawai FROM pegawai
+    -> GROUP BY jenis_kelamin HAVING COUNT(*) >= 10;
++---------------+----------------+
+| jenis_kelamin | jumlah_pegawai |
++---------------+----------------+
+| Perempuan     |             10 |
++---------------+----------------+
+1 row in set (0.001 sec)
+
+
+Jawaban No. 44 Cari data pegawai yang berawalan kata Muhammad
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE nama LIKE 'Muhammad%';
+Empty set (0.001 sec)
+
+
+Jawaban No. 45 Cari data pegawai yang berakhiran kata Santoso 
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE nama LIKE '%Santoso';
+Empty set (0.001 sec)
+
+
+Jawaban No. 46 Cari data pegawai yang mengadung kata Asep
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE nama LIKE '%Asep%';
+Empty set (0.001 sec)
+
+
+Jawaban No. 47 Cari data pegawai yang huruf kelimanya huruf S
+MariaDB [dbpegawai]> SELECT * FROM pegawai
+    -> WHERE SUBSTRING(nama, 5, 1) = 'S';
+Empty set (0.001 sec)
